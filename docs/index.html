@@ -1,0 +1,426 @@
+<html lang="en-GB">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DictLLM: Post-training Compression of Large Language Model with Dictionary Kernels</title>
+    <meta name="description"
+        content="Research website for DictLLM: Post-training Compression of Large Language Model with Dictionary Kernels">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="robots" content="all">
+    <meta content="en_EN" property="og:locale">
+    <meta content="website" property="og:type">
+    <meta content="https://shikun.io/projects/clarity" property="og:url">
+    <meta content="DictLLM" property="og:title">
+    <meta content="Website Template for AI Research" property="og:description">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:description"
+        content="DictLLM: Post-training Compression of Large Language Model with Dictionary Kernels">
+    <meta name="twitter:image:src" content="assets/figures/clarity.png">
+
+    <link rel="stylesheet" type="text/css" media="all" href="assets/stylesheets/main_free.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="clarity/clarity.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/foundation.min.css">
+    <link href="assets/fontawesome-free-7.2.0-web/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/styles.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/index.js"></script>
+    <script src="assets/scripts/navbar.js"></script> <!-- Comment to remove table of content. -->
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            "HTML-CSS": {
+              scale: 95,
+              fonts: ["Gyre-Pagella"],
+              imageFont: null,
+              undefinedFamily: "'Arial Unicode MS', cmbright"
+            },
+            tex2jax: {
+                inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                processEscapes: true
+              }
+          });
+    </script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        div.container.blog p.text,
+        div.container.blog p.abstract,
+        div.container.blog p.caption {
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        /* div.container.blog.main {
+            margin-top: 3rem;
+        } */
+
+        .blog-intro p.author a {
+            font: inherit;
+            color: inherit;
+            text-decoration: none;
+        }
+
+        div.container.blog img.forward-figure {
+            display: block;
+            width: 75%;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            div.container.blog img.forward-figure {
+                width: 100%;
+            }
+        }
+
+        footer {
+            padding: 5px 0;
+            font-size: 5px;
+            line-height: 1;
+        }
+
+        footer p {
+            margin: 0;
+        }
+    </style>
+    <style>
+        #site-footer {
+            padding: 12px 0 !important;
+        }
+
+        #site-footer .container {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
+        #site-footer p,
+        #site-footer a {
+            font-size: 12px !important;
+            line-height: 1.4 !important;
+        }
+
+        #site-footer p {
+            margin: 0 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Title Page -->
+    <!-- Dark Theme Example: Change the background colour dark and change the following div "blog-title" into "blog-title white". -->
+    <!-- <div class="container blog" id="first-content" style="background-color: #E0E4E6;">
+        If you don't have a project cover: Change "blog-title" into "blog-title no-cover" 
+        <div class="blog-title "> -->
+    <div class="container blog" id="first-content" style="background-color: #E0E4E6;">
+        <div class="blog-title no-cover">
+            <div class="blog-intro">
+                <div>
+                    <h1 class="title">DictLLM: Post-training Compression of Large Language Model with Dictionary Kernels
+                    </h1>
+                    <p class="author">
+                        <a href="https://scholar.google.com/citations?user=vkWRJIAAAAAJ&hl=en&amp;hl=en" target="_blank"
+                            rel="noopener noreferrer">Jinho Park</a><sup>1</sup>,
+                        <a href="https://scholar.google.com/citations?user=3jLuG64AAAAJ&hl=en&amp;hl=en" target="_blank"
+                            rel="noopener noreferrer">Se Young Chun</a><sup>2</sup>,
+                        and
+                        <a href="https://scholar.google.com/citations?user=3jLuG64AAAAJ&hl=en&amp;hl=en" target="_blank"
+                            rel="noopener noreferrer">Mingoo Seok</a><sup>1</sup>
+                    </p>
+                    <p class="author" style="padding-top: 0px;">
+                        <sup>1</sup> Columbia University <br>
+                        <sup>2</sup> Seoul National University
+                    </p>
+
+                    <p class="abstract">
+                        DictLLM represents an LLM as weights shared across layers plus sparse, layer-specific
+                        coefficients, exposing
+                        redundancy
+                        that conventional layer-by-layer compression does not exploit. Importantly, this representation
+                        can be
+                        derived directly
+                        from a pretrained model via post-training compression, without fine-tuning the model.
+                    </p>
+                    <!-- Using FontAwesome Pro -->
+                    <!-- <div class="info">
+                        <div>
+                            <a href="https://arxiv.org" class="button icon" style="background-color: rgba(255, 255, 255, 0.3)"> Paper <i class="far fa-book-open"></i></a> &nbsp;&nbsp; 
+                            <a href="https://github.com" class="button icon" style="background-color: rgba(255, 255, 255, 0.3)">Code <i class="far fa-code"></i></a>  &nbsp;&nbsp; 
+                            <a href="https://www.microsoft.com/en-gb/microsoft-365/powerpoint" class="button icon" style="background-color: rgba(255, 255, 255, 0.3);">Slides <i class="far fa-presentation"></i></a>  &nbsp;&nbsp; 
+                            <a href="https://huggingface.co/spaces" class="button icon" style="background-color: rgba(255, 255, 255, 0.3)">Demo <i class="fa-light fa-face-smiling-hands"></i></a>
+                        </div>
+                    </div> -->
+
+                    <!-- Using FontAwesome Free -->
+                    <div class="info">
+                        <div>
+                            <a href="https://arxiv.org" class="button icon"
+                                style="background-color: rgba(255, 255, 255, 0.2)"> Paper <i
+                                    class="fa-regular fa-file-lines"></i></a> &nbsp;&nbsp;
+                            <a href="https://github.com" class="button icon"
+                                style="background-color: rgba(255, 255, 255, 0.2)">Code <i
+                                    class="fa-solid fa-code"></i></a> &nbsp;&nbsp;
+                            <a href="https://www.microsoft.com/en-gb/microsoft-365/powerpoint" class="button icon"
+                                style="background-color: rgba(255, 255, 255, 0.2);">Slides <i
+                                    class="fa-regular fa-file-powerpoint"></i></a> &nbsp;&nbsp;
+                            <a href="https://huggingface.co/spaces/" class="button icon"
+                                style="background-color: rgba(255, 255, 255, 0.2)">Demo <i
+                                    class="fa-brands fa-hugging-face"></i></a>
+                            <a href="https://huggingface.co/spaces/" class="button icon"
+                                style="background-color: rgba(255, 255, 255, 0.2)">Demo <i
+                                    class="fa-brands fa-hugging-face"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info">
+                    <p>NeurIPS 2026</p>
+                </div>
+            </div>
+
+            <!-- <div class="blog-cover">
+                <img class="foreground" src="assets/figures/clarity.png">
+                <img class="background" src="assets/figures/clarity.png">
+            </div> -->
+        </div>
+    </div>
+
+    <div class="container blog main first">
+        <h1>
+            Abstract
+        </h1>
+        <p class='text'>
+            We propose DictLLM, a dictionary-based compression scheme in which weight matrices within grouped layers are
+            decomposed
+            into a shared dictionary and layer-specific sparse coefficients, directly obtained from a pre-trained model
+            without
+            further training.
+            Specifically, we cast DictLLM as a four-step post-training optimization.
+            First, we obtain shared dictionaries via singular value decomposition (SVD) of input-scaled weight matrices,
+            amortizing
+            rank across grouped layers; second, we sparsify the layer-specific coefficients to the target compression
+            ratio using a
+            dictionary-aware Hessian; and third, we refine the dictionaries given the resulting sparse coefficients.
+            Finally, we aggressively quantize both components using factor-specific Hessian information: input
+            covariance for the
+            dictionaries and the dictionary-aware Hessian for the coefficients.
+            The resulting representation reduces memory footprint by storing a single shared dictionary per layer group,
+            along with
+            sparse layer-specific coefficients.
+        </p>
+    </div>
+
+    <div class="container blog main first">
+        <h1>
+            Proposed method
+        </h1>
+        <p class='text'>
+            DictLLM resolves the weight memory bottleneck by compressing transformer weights into a shareable
+            dictionary.
+            It compounds four compression steps.
+            ❶ The first step factorizes input-scaled weight matrices of
+            grouped layers into a shared dictionary
+            and
+            layer-specific coefficients.
+            ❷ We then prune the layer-specific coefficients using a dictionary-aware Hessian.
+            ❸ We refit the shared dictionary to the resulting sparse coefficients.
+            ❹ We quantize both the dictionary and the coefficients into NVFP4 using input statistics for the
+            dictionary and
+            dictionary-aware Hessians for the coefficients.
+            The resulting compressed representation enables efficient projections by transferring a small set of shared
+            dictionaries.
+        </p>
+    </div>
+
+    <div class="container blog main gray">
+        <img src="assets/figures/method.svg">
+        <p class="caption">
+            <span style="font-weight: bold;">Figure 1 - DictLLM: Dictionary-based compression
+                method.</span>
+        </p>
+    </div>
+
+    <div class="container blog main first">
+        <h1>
+            Dictionary-based forward operation
+        </h1>
+        <p class='text'>
+            We first describe the shared-dictionary representation and the forward operation.
+            For a layer group $g$ with layers $\ell \in g$ that share a dictionary, we define input dimension
+            $d_\text{in}$, output dimension $d_\text{out}$, and dictionary size $k$.
+            A shared dictionary $\widetilde{\mathbf{D}}^{g} \in \mathbb{R}^{d_\text{in} \times k}$ is reused by every
+            layer in the group, while the coefficient matrix $\widetilde{\mathbf{C}}^{\ell} \in \mathbb{R}^{k \times
+            d_\text{out}}$ of each layer is not shared.
+        </p>
+    </div>
+
+    <div class="container blog main white">
+        <img src="assets/figures/dict_forward.svg" class="forward-figure">
+        <p class="caption">
+            <span style="font-weight: bold;">Figure 2 - Dictionary-based forward operation.</span>
+        </p>
+    </div>
+
+    <div class="container blog main first">
+        <h1>
+            Motivation for staged dictionary refinement
+        </h1>
+        <p class='text'>
+            We compare our method, consisting of activation-aware SVD, Hessian coefficient pruning, and post-pruning
+            dictionary update, against <em>k</em>-SVD with an undercomplete dictionary on the first layer of LLaMA-7B
+            query projection.
+            <em>k</em>-SVD is an alternative to our sequential pipeline for learning a sparse dictionary representation
+            from scratch.
+            However, full sparse dictionary learning is expensive at the LLM scale because it requires repeated
+            atom-wise and coefficient updates over a large number of weight columns.
+        </p>
+    </div>
+
+    <div class="container blog main white">
+        <img src="assets/figures/motivation.svg" class="forward-figure">
+        <p class="caption">
+            <span style="font-weight: bold;">Figure 3 - Dictionary-based forward operation.</span>
+        </p>
+    </div>
+
+    <div class="container blog main first">
+        <h1>
+            Perplexity-model size trade-off
+        </h1>
+        <p class='text'>
+            We evaluate the trade-off between WikiText-2 perplexity and model size ratio in Figure 4.
+            DictLLM achieves a 5.1× compression ratio on the original LLaMA model with only a 2.9-point increase in
+            WikiText-2 perplexity, providing 3.6× higher compression than the state-of-the-art low-rank
+            method.
+            In addition, DictLLM reduces perplexity by 9.4 points compared to Basis Sharing with 2x compression on
+            WikiText-2.
+        </p>
+    </div>
+
+    <div class="container blog main white">
+        <img src="assets/figures/ppl_model_size.svg">
+        <p class="caption">
+            <span style="font-weight: bold;">Figure 4 - Perplexity-model size trade-off.</span>
+            WikiText-2 perplexity of compressed LLaMA-7B across factorization ratios and coefficient sparsities.
+            DictLLM factorizes weights at rate $\rho_{\mathrm{fac}}$ and then prunes layer-specific coefficients with
+            20%-50%
+            sparsity.
+            We also report their NVFP4 versions.
+        </p>
+    </div>
+
+    <div class="container blog main">
+        <h1>Benchmark on language modeling and reasoning tasks</h1>
+        <p class="text">
+            We report language modeling perplexity and zero-shot reasoning accuracy in Table 1.
+            DictLLM consistently improves over low-rank baselines across compression ratios from 1.25× to 2×.
+            For example, DictLLM achieves an average zero-shot accuracy of 0.43 at 2× compression, compared with 0.40
+            for Basis Sharing at 1.67× compression.
+            We also report FP4-quantized variants, DictLLM<sub>FP4</sub>, at the bottom of Table 1.
+            Notably, DictLLM<sub>FP4</sub> achieves an average accuracy of 0.39 at 7× compression, outperforming Basis
+            Sharing at 2× compression with 0.36 average accuracy.
+        </p>
+    </div>
+
+    <div class="container blog main white">
+        <p class="caption">
+            <span style="font-weight: bold;">Table 1 - Benchmark on language modeling and reasoning tasks.</span>
+            We measure perplexity on WikiText-2, Penn TreeBank (PTB), and C4, and zero-shot accuracy on OpenBookQA (OB),
+            WinoGrande (WG), HellaSwag (HS), PIQA (PQ), MathQA (MQ), ARC-Easy (AE), and ARC-Challenge (AC).
+        </p>
+        <img src="assets/figures/benchmark_table.png">
+    </div>
+
+    <div class="container blog main">
+        <h1>Ablation of pruning target</h1>
+        <p class="text">
+            Table 2 examines whether sparsity should be applied to the shared dictionary, the layer-specific
+            coefficients, or both.
+            We control the sparsity of the pruning target to reach a 30% compression ratio.
+            The most interesting finding is that pruning the coefficients gives the lowest perplexity of all
+            combinations.
+            This suggests that the dictionary stores shared information that is reused across layers, whereas the
+            coefficients contain more layer-specific redundancy.
+        </p>
+    </div>
+
+    <div class="container blog main white">
+        <p class="caption">
+            <span style="font-weight: bold;">Table 2 - Ablation of pruning target. </span>
+
+        </p>
+        <img src="assets/figures/pruning_target.png" class="forward-figure">
+    </div>
+
+    <div class="container blog main first">
+        <h1>
+            Ablation of dictionary update
+        </h1>
+        <p class='text'>
+            We ablate the effect of updating the dictionary after coefficient pruning (Figure 5).
+            We keep the sparse coefficient matrices fixed and refit the shared dictionary across a coefficient sparsity
+            range from 20% to 50%.
+            This step improves the reconstruction induced by the fixed sparse codes without changing the sparsity
+            pattern or model-size estimate.
+            The interesting part is that perplexity reduction is higher at increased sparsity: 1.04 PPL at 50% sparsity,
+            whereas 0.06 PPL at 20% sparsity.
+        </p>
+    </div>
+
+    <div class="container blog main white">
+        <img src="assets/figures/dict_update.svg" class="forward-figure">
+        <p class="caption">
+            <span style="font-weight: bold;">
+                Figure 5 - Ablation of dictionary update.
+            </span>
+        </p>
+    </div>
+
+    <div class="container blog main">
+        <h1>Conclusion</h1>
+        <p class="text">
+            We present DictLLM, a post-training compression method that represents transformer weights with shared
+            dictionary kernels and layer-specific sparse coefficients.
+            DictLLM first recovers shared dictionaries through activation-aware factorization, then prunes the
+            coefficients using a dictionary-aware Hessian that projects calibration covariance into coefficient space.
+            We then refit the shared dictionary by using the resulting coefficients.
+            We further apply NVFP4 quantization with Hessian-based error compensation to both dictionary and coefficient
+            factors, reducing storage while maintaining the factorized structure.
+            Comprehensive experiments show that DictLLM improves the perplexity-model size trade-off and preserves
+            performance relative to state-of-the-art low-rank compression methods across language modeling and zero-shot
+            reasoning benchmarks.
+        </p>
+    </div>
+
+    <div class="container blog main">
+        <h1>Citation</h1>
+        <pre><code class="plaintext">@inproceedings{park2026dictllm,
+      title={{DictLLM: Post-training Compression of Large Language Model with Dictionary Kernels}},
+      author={Park, Jinho and Chun, Se Young and Seok, Mingoo},
+      booktitle={Advances in Neural Information Processing Systems},
+      year={2026},
+}
+</code></pre>
+    </div>
+
+    <!-- Footer Page -->
+    <footer id="site-footer">
+        <div class="container">
+            <p>
+                This website is built on the <a href="https://shikun.io/projects/clarity">Clarity Template</a>, designed
+                by <a href="https://shikun.io/">Shikun Liu</a>.
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script src="clarity/clarity.js"></script>
+    <script src="assets/scripts/main.js"></script>
+
+</html>
+</body>

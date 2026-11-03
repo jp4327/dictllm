@@ -1,0 +1,102 @@
+# Nominal targeted-parameter gain: 1.67x after factorization and pruning/refit.
+# Excludes quantization gain and sparse-index metadata; rank/mask rounding applies.
+# Reference checkpoint: share_llama_7b_30_fasterhessian_hessian_sparsity0.2217_block128_cholesky
+schema_version: 1
+
+model:
+  name_or_path: jeffwan/llama-7b-hf
+  architecture: llama
+  dtype: float32
+  attention_implementation: sdpa
+  cache_dir: null
+
+pipeline:
+  stages: [factorize, prune, refit]
+  seed: 2023
+  resume: true
+  deterministic_algorithms: false
+
+calibration:
+  dataset: wikitext
+  split: train
+  samples: 256
+  batch_size: 16
+  context_length: 2048
+  seed: 2023
+  device: cuda
+  cache_dir: ../.cache/calibration/llama7b/wikitext
+  cache_format: dictllm
+  force: true
+  covariance_normalization: sum
+  dataset_cache_dir: ../.cache/huggingface
+  num_workers: 4
+
+factorization:
+  targets: [v, k, q, up, gate, down, o]
+  target_reduction: 0.30
+  default_layer_group_size: 2
+  per_target_layer_group_size:
+    down: 1
+    o: 1
+  rank_policy: target_reduction
+  rank_alignment: none
+  covariance_relative_damping: 0.0
+  fallback_eigenvalue_shift: 7.0e-6
+  cholesky_max_attempts: 6
+  minimum_rank: 1
+  compute_dtype: float64
+  numerical_method: basis_sharing
+  device: cuda
+
+pruning:
+  method: hessian
+  coefficient_sparsity: 0.2217
+  hessian_damping: 1.0e-4
+  hessian_inverse_method: cholesky
+  coefficient_block_size: 128
+  device: cuda
+
+refit:
+  method: mod
+  objective: weight
+  ridge_damping: 1.0e-4
+  preserve_coefficient_mask: true
+  device: cpu
+
+quantization:
+  export_mode: fake
+  targets: [basis, coefficient]
+  format: nvfp4
+  w_bits: 4
+  w_group_size: 16
+  scale_precision: e4m3
+  transform_class: identity
+  method: masked_gptq
+  blocksize: 128
+  rel_damp: 0.1
+  calibration_size: 16
+  calibration_batch_size: 1
+  calibration_selection: first
+  device: cuda
+  max_modules: null
+
+serialization:
+  format: safetensors
+  refit_dtype: bfloat16
+  shared_tensor_policy: canonical_repository
+  max_shard_size: 4GB
+  save_tokenizer: true
+
+evaluation:
+  enabled: true
+  datasets: [wikitext]
+  context_length: 2048
+  stride: 2048
+  device: cuda
+
+output:
+  root: ../outputs/llama7b_wikitext_comp_gain_1p67x
+
+# Retain the final requested checkpoint; intermediates use a private disk workspace.
+checkpointing:
+  policy: final

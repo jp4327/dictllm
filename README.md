@@ -1,4 +1,4 @@
-<div align="center">
+<!-- <div align="center"> -->
 
 # DictLLM : Post-training Compression of <br> Large Language Model with Dictionary Kernels <br> **NeurIPS 2026**
 
@@ -6,13 +6,14 @@
 [Se Young Chun](https://scholar.google.com/citations?user=3jLuG64AAAAJ&hl=en)<sup>2</sup> &nbsp;&nbsp;&nbsp; 
 [Mingoo Seok](https://scholar.google.com/citations?user=OPECx0sAAAAJ&hl=en)<sup>1</sup>
 
-<sup>1</sup>**Columbia University** &nbsp;&nbsp;&nbsp;&nbsp; 
+<sup>1</sup>**Columbia University** &nbsp;&nbsp;&nbsp;&nbsp; <br>
 <sup>2</sup>**Seoul National University**
 
-</div>
+<!-- </div> -->
 
 <a href="https://arxiv.org/"><img src="https://img.shields.io/badge/Paper-arXiv:-Green"></a>
 [![project_page](https://img.shields.io/badge/-project%20page-skyblue)](https://jp4327.github.io/dictllm/)
+[![neurips page](https://img.shields.io/badge/-neurips_page-grey)](https://neurips.cc/virtual/2026/loc/atlanta/poster/151096)
 [![slide](https://img.shields.io/badge/-slide-grey)](./docs/assets/files/[NeurIPS%202026]%20DictLLM_slide_v1.pdf)
 [![poster](https://img.shields.io/badge/-poster-grey)](./docs/assets/files/[NeurIPS%202026]%20DictLLM_Poster_v1.pdf)
 

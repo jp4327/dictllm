@@ -1,6 +1,6 @@
 <!-- <div align="center"> -->
 
-# DictLLM : Post-training Compression of <br> Large Language Model with Dictionary Kernels <br> **NeurIPS 2026**
+# DictLLM : Post-training Compression of <br> Large Language Model with Dictionary Kernels <br> *NeurIPS 2026*
 
 [Jinho Park](https://scholar.google.com/citations?user=vkWRJIAAAAAJ&hl=en)<sup>1</sup> &nbsp;&nbsp;&nbsp; 
 [Se Young Chun](https://scholar.google.com/citations?user=3jLuG64AAAAJ&hl=en)<sup>2</sup> &nbsp;&nbsp;&nbsp; 
@@ -19,10 +19,10 @@
 
 This repository contains the evaluation code for the following paper: 
 
-[**DictLLM : Post-training Compression of Large Language Model with Dictionary Kernels**](https://arxiv.org/abs/2603.17979)
+[**DictLLM : Post-training Compression of Large Language Model with Dictionary Kernels**](https://arxiv.org/)
 
 
-<img src="docs/assets/figures/method.png" alt="overview" width="700"/>
+<img src="docs/assets/figures/method_wb.png" alt="overview" width="700"/>
 
 We propose a post-training compression method that expresses LLMs as shared dictionary across grouped layers and layer-specific coefficients, pushing the performance-model size frontier.
 

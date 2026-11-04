@@ -13,13 +13,15 @@
 
 <a href="https://arxiv.org/"><img src="https://img.shields.io/badge/Paper-arXiv:-Green"></a>
 [![project_page](https://img.shields.io/badge/-project%20page-skyblue)](https://jp4327.github.io/dictllm/)
+[![slide](https://img.shields.io/badge/-slide-grey)](./docs/assets/files/[NeurIPS%202026]%20DictLLM_slide_v1.pdf)
+[![poster](https://img.shields.io/badge/-poster-grey)](./docs/assets/files/[NeurIPS%202026]%20DictLLM_Poster_v1.pdf)
 
 This repository contains the evaluation code for the following paper: 
 
 [**DictLLM : Post-training Compression of Large Language Model with Dictionary Kernels**](https://arxiv.org/abs/2603.17979)
 
 
-<img src="docs/assets/figures/method.svg" alt="overview" width="700"/>
+<img src="docs/assets/figures/method.png" alt="overview" width="700"/>
 
 We propose a post-training compression method that expresses LLMs as shared dictionary across grouped layers and layer-specific coefficients, pushing the performance-model size frontier.
 

@@ -1,6 +1,6 @@
 <!-- <div align="center"> -->
 
-# DictLLM : Post-training Compression of <br> Large Language Model with Dictionary Kernels <br> *NeurIPS 2026*
+# DictLLM : Post-training Compression of <br> Large Language Model with Dictionary Kernels <br> **NeurIPS 2026**
 
 [Jinho Park](https://scholar.google.com/citations?user=vkWRJIAAAAAJ&hl=en)<sup>1</sup> &nbsp;&nbsp;&nbsp; 
 [Se Young Chun](https://scholar.google.com/citations?user=3jLuG64AAAAJ&hl=en)<sup>2</sup> &nbsp;&nbsp;&nbsp; 
@@ -11,7 +11,7 @@
 
 <!-- </div> -->
 
-<a href="https://arxiv.org/"><img src="https://img.shields.io/badge/Paper-arXiv:-Green"></a>
+<a href="https://arxiv.org/abs/2611.08082"><img src="https://img.shields.io/badge/Paper-arXiv:2611.08082-Green"></a>
 [![project_page](https://img.shields.io/badge/-project%20page-skyblue)](https://jp4327.github.io/dictllm/)
 [![neurips page](https://img.shields.io/badge/-neurips_page-grey)](https://neurips.cc/virtual/2026/loc/atlanta/poster/151096)
 [![slide](https://img.shields.io/badge/-slide-grey)](./docs/assets/files/[NeurIPS%202026]%20DictLLM_slide_v1.pdf)
@@ -19,7 +19,7 @@
 
 This repository contains the evaluation code for the following paper: 
 
-[**DictLLM : Post-training Compression of Large Language Model with Dictionary Kernels**](https://arxiv.org/)
+[**DictLLM : Post-training Compression of Large Language Model with Dictionary Kernels**](https://arxiv.org/abs/2611.08082)
 
 
 <img src="docs/assets/figures/method_wb.png" alt="overview" width="700"/>
